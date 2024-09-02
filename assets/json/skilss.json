@@ -1,23 +1,107 @@
 [
     {
         "id": 1,
-        "name": "Llamarada",
-        "personaje": "Mago",
-        "animacion": "alert('¡Llamarada activada!');",
-        "raresa": "épico"
-    },
-    {
-        "id": 2,
-        "name": "Golpe de Sombra",
-        "personaje": "Asesino",
-        "animacion": "alert('¡Golpe de Sombra activado!');",
+        "name": "Expansión de Dominio",
+        "personaje": "Satoru Gojo",
+        "animacion": "console.log('Dominio Infinito');",
         "raresa": "legendario"
     },
     {
+        "id": 2,
+        "name": "Maldición del Demonio",
+        "personaje": "Ryomen Sukuna",
+        "animacion": "console.log('Corte Doble');",
+        "raresa": "épico"
+    },
+    {
         "id": 3,
-        "name": "Curación",
-        "personaje": "Sacerdote",
-        "animacion": "alert('¡Curación activada!');",
-        "raresa": "normal"
+        "name": "Manipulación de Sombras",
+        "personaje": "Megumi Fushiguro",
+        "animacion": "console.log('Técnica de Sombras Tenebrosas');",
+        "raresa": "raro"
+    },
+    {
+        "id": 4,
+        "name": "Arte de Barrera",
+        "personaje": "Kento Nanami",
+        "animacion": "console.log('Corte Ratio');",
+        "raresa": "épico"
+    },
+    {
+        "id": 5,
+        "name": "Control de Sangre",
+        "personaje": "Choso",
+        "animacion": "console.log('Explosión de Sangre');",
+        "raresa": "legendario"
+    },
+    {
+        "id": 6,
+        "name": "Martillo y Clavos",
+        "personaje": "Nobara Kugisaki",
+        "animacion": "console.log('Resonancia');",
+        "raresa": "raro"
+    },
+    {
+        "id": 7,
+        "name": "Manipulación de Malditos",
+        "personaje": "Suguru Geto",
+        "animacion": "console.log('Control de Malditos');",
+        "raresa": "épico"
+    },
+    {
+        "id": 8,
+        "name": "Maldición de la Piel",
+        "personaje": "Mahito",
+        "animacion": "console.log('Transfiguración Inerte');",
+        "raresa": "legendario"
+    },
+    {
+        "id": 9,
+        "name": "Arte de la Conjuración",
+        "personaje": "Yuta Okkotsu",
+        "animacion": "console.log('Conjuración de Rika');",
+        "raresa": "legendario"
+    },
+    {
+        "id": 10,
+        "name": "Tecnica de Proyección",
+        "personaje": "Naobito Zenin",
+        "animacion": "console.log('Proyección de 24 FPS');",
+        "raresa": "épico"
+    },
+    {
+        "id": 11,
+        "name": "Control de Plantas",
+        "personaje": "Hanami",
+        "animacion": "console.log('Flor Maldita');",
+        "raresa": "raro"
+    },
+    {
+        "id": 12,
+        "name": "Aceleración",
+        "personaje": "Aoi Todo",
+        "animacion": "console.log('Boogie Woogie');",
+        "raresa": "épico"
+    },
+    {
+        "id": 13,
+        "name": "Manipulación de Armamento",
+        "personaje": "Maki Zenin",
+        "animacion": "console.log('Maestría de Armas');",
+        "raresa": "raro"
+    },
+    {
+        "id": 14,
+        "name": "Maldición de Lengua",
+        "personaje": "Inumaki Toge",
+        "animacion": "console.log('Explosión de Palabras');",
+        "raresa": "épico"
+    },
+    {
+        "id": 15,
+        "name": "Transformación de Lodo",
+        "personaje": "Jogo",
+        "animacion": "console.log('Erosión de Lava');",
+        "raresa": "legendario"
     }
 ]
