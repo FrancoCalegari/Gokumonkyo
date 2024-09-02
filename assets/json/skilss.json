@@ -1,0 +1,23 @@
+[
+    {
+        "id": 1,
+        "name": "Llamarada",
+        "personaje": "Mago",
+        "animacion": "alert('¡Llamarada activada!');",
+        "raresa": "épico"
+    },
+    {
+        "id": 2,
+        "name": "Golpe de Sombra",
+        "personaje": "Asesino",
+        "animacion": "alert('¡Golpe de Sombra activado!');",
+        "raresa": "legendario"
+    },
+    {
+        "id": 3,
+        "name": "Curación",
+        "personaje": "Sacerdote",
+        "animacion": "alert('¡Curación activada!');",
+        "raresa": "normal"
+    }
+]
