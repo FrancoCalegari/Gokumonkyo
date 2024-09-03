@@ -1,3 +1,5 @@
+// script.js
+
 let scene, camera, renderer, dice;
 let isSpinning = false;
 let spinSpeed = 0.01;
@@ -6,17 +8,18 @@ let decelerationFactor = 0.9; // Factor de desaceleración exponencial
 let maxSpinSpeed = 0.5;
 let currentSpinSpeed = spinSpeed;
 let flashSprite;
-let inventory = [];
+
+document.addEventListener('DOMContentLoaded', (event) => {
+    init();
+});
 
 function init() {
-    
     // Configuración básica de la escena
     scene = new THREE.Scene();
     camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
     renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setSize(window.innerWidth, window.innerHeight);
     document.getElementById('dado-container').appendChild(renderer.domElement);
-
 
     // Crear el cubemap
     const loader = new THREE.CubeTextureLoader();
@@ -77,12 +80,6 @@ function init() {
 
     // Manejar el redimensionamiento de la ventana
     window.addEventListener('resize', onWindowResize, false);
-
-     // Cargar inventario desde el cache
-     loadInventory();
-
-     // Añadir evento para mostrar el inventario
-     document.getElementById('inventory-button').addEventListener('click', showInventory);
 }
 
 function onWindowResize() {
@@ -146,68 +143,6 @@ async function mostrarHabilidadAleatoria() {
 
     // Guardar habilidad en el inventario
     addToInventory(habilidad);
-
-    // Aplicar destello al dado
-    applyFlash(getRaresaColor(habilidad.raresa));
-
-    // Ejecutar animación
-    eval(habilidad.animacion);
-}
-
-function addToInventory(habilidad) {
-    if (inventory.length >= 5) {
-        inventory.shift(); // Eliminar el ítem más antiguo
-    }
-    inventory.push(habilidad);
-    saveInventory();
-}
-
-function saveInventory() {
-    localStorage.setItem('inventory', JSON.stringify(inventory));
-}
-
-function loadInventory() {
-    const storedInventory = localStorage.getItem('inventory');
-    if (storedInventory) {
-        inventory = JSON.parse(storedInventory);
-    }
-}
-
-function showInventory() {
-    const inventoryContainer = document.getElementById('inventory-container');
-    inventoryContainer.innerHTML = inventory.map(habilidad => `
-        <div class="inventory-item" data-id="${habilidad.id}">
-            <p>${habilidad.name}</p>
-            <p>Raresa: <span style="color:${getRaresaColor(habilidad.raresa)}">${habilidad.raresa}</span></p>
-            <button class="remove-button">Eliminar</button>
-        </div>
-    `).join('');
-
-    // Añadir evento para eliminar habilidades del inventario
-    document.querySelectorAll('.remove-button').forEach(button => {
-        button.addEventListener('click', (event) => {
-            const itemId = event.target.parentElement.getAttribute('data-id');
-            removeFromInventory(itemId);
-            showInventory();
-        });
-    });
-}
-
-function removeFromInventory(id) {
-    inventory = inventory.filter(habilidad => habilidad.id !== id);
-    saveInventory();
-}
-
-
-function getRaresaColor(raresa) {
-    switch(raresa) {
-        case 'mítico': return 'red';
-        case 'legendario': return 'yellow';
-        case 'épico': return 'green';
-        case 'raro': return 'blue';
-        case 'normal': return 'grey';
-        default: return 'black';
-    }
 }
 
 function applyFlash(color) {
@@ -228,5 +163,3 @@ function applyFlash(color) {
         }
     }, 55);
 }
-
-init();

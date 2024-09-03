@@ -1,5 +1,6 @@
 body {
     margin: 0;
+    padding: 0;
     overflow: hidden;
     display: flex;
     justify-content: center;
@@ -30,6 +31,7 @@ body {
     top: 10px;
     z-index: 1;
 }
+
 .flash {
     animation: flash-animation 1s;
 }
@@ -39,7 +41,6 @@ body {
     50% { opacity: 0.5; }
     100% { opacity: 1; }
 }
-
 
 .inventory-container {
     position: fixed;
@@ -51,6 +52,7 @@ body {
     color: #fff;
     overflow-y: auto;
     display: none;
+    z-index: 2; /* Asegúrate de que el inventario esté por encima del canvas */
 }
 
 .inventory-item {
@@ -79,5 +81,5 @@ body {
     top: 20px;
     right: 20px;
     padding: 10px;
+    z-index: 3; /* Asegúrate de que el botón esté por encima del inventario */
 }
-
