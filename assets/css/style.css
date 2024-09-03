@@ -28,7 +28,7 @@ body {
     padding: 10px;
     border-radius: 5px;
     position: absolute;
-    top: 10px;
+    bottom: 10px;
     z-index: 1;
 }
 
@@ -78,7 +78,7 @@ body {
 
 #inventory-button {
     position: absolute;
-    top: 20px;
+    bottom: 20px;
     right: 20px;
     padding: 10px;
     z-index: 3; /* Asegúrate de que el botón esté por encima del inventario */

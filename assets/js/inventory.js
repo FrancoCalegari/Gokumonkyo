@@ -9,36 +9,25 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
     // Cargar inventario desde el cache
     loadInventory();
+    showInventory(); // Mostrar el inventario al cargar
 });
 
 function showInventory() {
     const inventoryContainer = document.getElementById('inventory-container');
     inventoryContainer.innerHTML = inventory.map(habilidad => `
         <div class="inventory-item" data-id="${habilidad.id}">
-            <p><strong>Nombre:</strong> <span contenteditable="true" class="editable">${habilidad.name}</span></p>
-            <p><strong>Raresa:</strong> <span contenteditable="true" class="editable">${habilidad.raresa}</span></p>
+            <p><strong>Nombre:</strong> ${habilidad.name}</p>
+            <p><strong>Personaje:</strong> ${habilidad.personaje}</p>
+            <p><strong>Raresa:</strong> <span style="color:${getRaresaColor(habilidad.raresa)}">${habilidad.raresa}</span></p>
             <button class="remove-button">Eliminar</button>
-            <button class="save-button">Guardar</button>
         </div>
     `).join('');
 
     // Añadir evento para eliminar habilidades del inventario
     document.querySelectorAll('.remove-button').forEach(button => {
         button.addEventListener('click', (event) => {
-            const itemId = event.target.parentElement.getAttribute('data-id');
+            const itemId = parseInt(event.target.parentElement.getAttribute('data-id'));
             removeFromInventory(itemId);
-            showInventory();
-        });
-    });
-
-    // Añadir evento para guardar modificaciones
-    document.querySelectorAll('.save-button').forEach(button => {
-        button.addEventListener('click', (event) => {
-            const itemId = event.target.parentElement.getAttribute('data-id');
-            const itemElement = event.target.parentElement;
-            const newName = itemElement.querySelector('span.editable:nth-of-type(1)').innerText;
-            const newRaresa = itemElement.querySelector('span.editable:nth-of-type(2)').innerText;
-            updateInventory(itemId, newName, newRaresa);
         });
     });
 }
@@ -59,6 +48,7 @@ function addToInventory(habilidad) {
     }
     inventory.push(habilidad);
     saveInventory();
+    showInventory(); // Refrescar la visualización del inventario
 }
 
 function saveInventory() {
@@ -75,17 +65,7 @@ function loadInventory() {
 function removeFromInventory(id) {
     inventory = inventory.filter(habilidad => habilidad.id !== id);
     saveInventory();
-    showInventory();
-}
-
-function updateInventory(id, newName, newRaresa) {
-    const habilidad = inventory.find(habilidad => habilidad.id === id);
-    if (habilidad) {
-        habilidad.name = newName;
-        habilidad.raresa = newRaresa;
-        saveInventory();
-        showInventory();
-    }
+    showInventory(); // Refrescar la visualización del inventario
 }
 
 function getRaresaColor(raresa) {

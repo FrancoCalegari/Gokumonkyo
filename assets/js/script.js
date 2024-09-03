@@ -1,5 +1,3 @@
-// script.js
-
 let scene, camera, renderer, dice;
 let isSpinning = false;
 let spinSpeed = 0.01;
@@ -8,10 +6,6 @@ let decelerationFactor = 0.9; // Factor de desaceleración exponencial
 let maxSpinSpeed = 0.5;
 let currentSpinSpeed = spinSpeed;
 let flashSprite;
-
-document.addEventListener('DOMContentLoaded', (event) => {
-    init();
-});
 
 function init() {
     // Configuración básica de la escena
@@ -143,6 +137,19 @@ async function mostrarHabilidadAleatoria() {
 
     // Guardar habilidad en el inventario
     addToInventory(habilidad);
+}
+
+init();
+
+function getRaresaColor(raresa) {
+    switch(raresa) {
+        case 'mítico': return 'red';
+        case 'legendario': return 'yellow';
+        case 'épico': return 'green';
+        case 'raro': return 'blue';
+        case 'normal': return 'grey';
+        default: return 'black';
+    }
 }
 
 function applyFlash(color) {
