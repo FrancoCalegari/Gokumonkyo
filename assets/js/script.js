@@ -1,21 +1,18 @@
-let scene, camera, renderer, dice;
+let scene, camera, renderer, dice, particleSystem;
 let isSpinning = false;
 let spinSpeed = 0.01;
-let accelerationFactor = 1.1; // Factor de aceleración exponencial
-let decelerationFactor = 0.9; // Factor de desaceleración exponencial
+let accelerationFactor = 1.1;
+let decelerationFactor = 0.9;
 let maxSpinSpeed = 0.5;
 let currentSpinSpeed = spinSpeed;
-let flashSprite;
 
 function init() {
-    // Configuración básica de la escena
     scene = new THREE.Scene();
     camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
     renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setSize(window.innerWidth, window.innerHeight);
     document.getElementById('dado-container').appendChild(renderer.domElement);
 
-    // Crear el cubemap
     const loader = new THREE.CubeTextureLoader();
     const texture = loader.load([
         './assets/textures/red_dark_posx.jpg',
@@ -27,7 +24,6 @@ function init() {
     ]);
     scene.background = texture;
 
-    // Crear el dado
     const geometry = new THREE.BoxGeometry();
     const diceLoader = new THREE.TextureLoader();
 
@@ -45,21 +41,40 @@ function init() {
 
     camera.position.z = 3;
 
-    // Añadir evento de click
-    renderer.domElement.addEventListener('click', spinDice);
+    renderer.domElement.addEventListener('click', onDiceClick);
 
-    // Añadir una luz ambiental
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
     scene.add(ambientLight);
 
-    // Crear un sprite para el destello
-    const spriteMaterial = new THREE.SpriteMaterial({ color: 0xffffff });
-    flashSprite = new THREE.Sprite(spriteMaterial);
-    flashSprite.scale.set(2, 2, 1); // Tamaño del sprite
-    flashSprite.visible = false; // Inicialmente invisible
-    scene.add(flashSprite);
+    // Crear un sistema de partículas
+    const particleCount = 1000;
+    const particles = new THREE.BufferGeometry();
+    const positions = new Float32Array(particleCount * 3);
+    const colors = new Float32Array(particleCount * 3);
 
-    // Render loop
+    for (let i = 0; i < particleCount; i++) {
+        positions[i * 3] = (Math.random() - 0.5) * 2; // X
+        positions[i * 3 + 1] = (Math.random() - 0.5) * 2; // Y
+        positions[i * 3 + 2] = (Math.random() - 0.5) * 2; // Z
+
+        colors[i * 3] = 1; // R
+        colors[i * 3 + 1] = 1; // G
+        colors[i * 3 + 2] = 1; // B
+    }
+
+    particles.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+    particles.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+
+    const particleMaterial = new THREE.PointsMaterial({
+        size: 0.1,
+        vertexColors: true,
+        transparent: true,
+        opacity: 0
+    });
+
+    particleSystem = new THREE.Points(particles, particleMaterial);
+    scene.add(particleSystem);
+
     function animate() {
         requestAnimationFrame(animate);
 
@@ -72,7 +87,6 @@ function init() {
     }
     animate();
 
-    // Manejar el redimensionamiento de la ventana
     window.addEventListener('resize', onWindowResize, false);
 }
 
@@ -82,11 +96,33 @@ function onWindowResize() {
     renderer.setSize(window.innerWidth, window.innerHeight);
 }
 
+function onDiceClick() {
+    animateScaleDown();
+    setTimeout(() => {
+        animateScaleUp();
+        spinDice();
+    }, 300);
+}
+
+function animateScaleDown() {
+    new TWEEN.Tween(dice.scale)
+        .to({ x: 0.8, y: 0.8, z: 0.8 }, 300)
+        .easing(TWEEN.Easing.Quadratic.Out)
+        .start();
+}
+
+function animateScaleUp() {
+    new TWEEN.Tween(dice.scale)
+        .to({ x: 1, y: 1, z: 1 }, 300)
+        .easing(TWEEN.Easing.Quadratic.Out)
+        .start();
+}
+
 function spinDice() {
     if (isSpinning) return;
     isSpinning = true;
 
-    let spinDuration = 5000; // Duración del giro en milisegundos
+    let spinDuration = 5000;
     let startTime = Date.now();
 
     function accelerate() {
@@ -126,10 +162,10 @@ async function mostrarHabilidadAleatoria() {
         <p><strong>ID:</strong> ${habilidad.id}</p>
         <p><strong>Nombre:</strong> ${habilidad.name}</p>
         <p><strong>Personaje:</strong> ${habilidad.personaje}</p>
-        <p><strong>Raresa:</strong> <span style="color:${getRaresaColor(habilidad.raresa)}">${habilidad.raresa}</span></p>
+        <p><strong>Rareza:</strong> <span style="color:${getRaresaColor(habilidad.raresa)}">${habilidad.raresa}</span></p>
     `;
 
-    // Aplicar destello al dado
+    // Aplicar el efecto de flash
     applyFlash(getRaresaColor(habilidad.raresa));
 
     // Ejecutar animación
@@ -139,34 +175,56 @@ async function mostrarHabilidadAleatoria() {
     addToInventory(habilidad);
 }
 
-init();
-
 function getRaresaColor(raresa) {
     switch(raresa) {
         case 'mítico': return 'red';
         case 'legendario': return 'yellow';
-        case 'épico': return 'green';
-        case 'raro': return 'blue';
+        case 'épico': return 'violet';
+        case 'raro': return 'green';
         case 'normal': return 'grey';
         default: return 'black';
     }
 }
 
 function applyFlash(color) {
-    // Cambiar el color del sprite
-    flashSprite.material.color.set(color);
-    flashSprite.position.copy(dice.position);
-    flashSprite.visible = true;
+    const particleMaterial = particleSystem.material;
+    particleMaterial.color.set(color);
+    particleSystem.material.opacity = 1; // Asegúrate de que sea visible
 
-    // Animar el destello del sprite
-    let intensity = 1;
-    const flashInterval = setInterval(() => {
-        intensity -= 0.05;
-        flashSprite.material.opacity = intensity;
+    // Animar las partículas
+    let duration = 500; // Duración del flash
+    let startTime = Date.now();
 
-        if (intensity <= 0) {
-            clearInterval(flashInterval);
-            flashSprite.visible = false;
+    function updateParticles() {
+        let elapsed = Date.now() - startTime;
+
+        // Reduce la opacidad con el tiempo
+        particleMaterial.opacity = Math.max(0, 1 - elapsed / duration);
+
+        // Mover las partículas hacia afuera
+        const positions = particleSystem.geometry.attributes.position.array;
+        for (let i = 0; i < positions.length; i += 3) {
+            positions[i] += (Math.random() - 0.5) * 0.1; // X
+            positions[i + 1] += (Math.random() - 0.5) * 0.1; // Y
+            positions[i + 2] += (Math.random() - 0.5) * 0.1; // Z
         }
-    }, 55);
+        particleSystem.geometry.attributes.position.needsUpdate = true;
+
+        if (elapsed < duration) {
+            requestAnimationFrame(updateParticles);
+        } else {
+            // Desactivar las partículas al final del efecto
+            particleMaterial.opacity = 0;
+        }
+    }
+    updateParticles();
 }
+
+// Actualizar TWEEN en cada frame
+function update() {
+    requestAnimationFrame(update);
+    TWEEN.update();
+}
+
+init();
+update();
